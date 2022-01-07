@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DragDropGenerate:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DragDropGenerate_jar</output-path>
+    <root id="archive" name="DragDropGenerate.jar">
+      <element id="module-output" name="DragDropGenerate" />
+    </root>
+  </artifact>
+</component>
