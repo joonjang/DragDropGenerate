@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // https://docs.oracle.com/javase/tutorial/uiswing/layout/spring.html
-public class DragDropFrame extends JFrame {
+public class DragDropFrameScratch extends JFrame {
     // TODO consider making PYTHON_PATH dynamic to where the script is
-    private String PYTHON_FILE = "add_ruler.py";
-    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
+    private String PYTHON_FILE = "hello.py";
+    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/";
 //    private String PYTHON_PATH = "Z:/internal/autoscan/ruler/joonRulerTestField/testingGround/";
     // String array to allow scalability to add other control inputs
     private String[] controlArr = {"Ruler Gap: ", "Ruler Width: "};
@@ -22,7 +22,7 @@ public class DragDropFrame extends JFrame {
     private MyDragDropListener myDragDropListener;
     private List<JTextField> textFieldList = new ArrayList<>();
 
-    public DragDropFrame() {
+    public DragDropFrameScratch() {
         super("Drag and drop");
         this.setPreferredSize(new Dimension(300,200));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,37 +97,22 @@ public class DragDropFrame extends JFrame {
         try {
             List<String> inputPathList = myDragDropListener.getInputPathList();
             if(!inputPathList.isEmpty()) {
-                Process p = Runtime.getRuntime().exec("python3 "
-                        + PYTHON_PATH + PYTHON_FILE
-                        + " "
-                        + inputPathList.get(inputPathList.size() - 1)
-                        + getControlCommands());
-
-//                String consoleCommand = "python3 "
+//                Process p = Runtime.getRuntime().exec("python3 "
 //                        + PYTHON_PATH + PYTHON_FILE
 //                        + " "
 //                        + inputPathList.get(inputPathList.size() - 1)
-//                        + getControlCommands();
-//
-//                Runtime rt = Runtime.getRuntime();
-//                Process p = rt.exec(consoleCommand);
-//
-//                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//
-//                while (stdInput.readLine() != null){
-//                    if(stdInput.readLine().equals("Complete")) {
-//                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
-//                    }
-//                    else{
-//                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.YELLOW, "<html>Generating...<br> </html>");
-//                    }
-//                }
-//                stdInput.close();
-//                stdError.close();
-//                Process p = Runtime.getRuntime().exec(consoleCommand);
+//                        + getControlCommands());
 
+                String consoleCommand = "python3 "
+                        + PYTHON_PATH + PYTHON_FILE
+                        + " "
+                        + inputPathList.get(inputPathList.size() - 1)
+                        + getControlCommands();
+
+                Runtime rt = Runtime.getRuntime();
+                Process p = rt.exec(consoleCommand);
                 inputPathList.clear();
+                changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
             }
             else {
                 changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.PINK, "<html>No file selected<br>Drag file here</html>");
