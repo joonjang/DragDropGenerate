@@ -97,12 +97,6 @@ public class DragDropFrameScratch extends JFrame {
         try {
             List<String> inputPathList = myDragDropListener.getInputPathList();
             if(!inputPathList.isEmpty()) {
-//                Process p = Runtime.getRuntime().exec("python3 "
-//                        + PYTHON_PATH + PYTHON_FILE
-//                        + " "
-//                        + inputPathList.get(inputPathList.size() - 1)
-//                        + getControlCommands());
-
                 String consoleCommand = "python3 "
                         + PYTHON_PATH + PYTHON_FILE
                         + " "
@@ -111,6 +105,7 @@ public class DragDropFrameScratch extends JFrame {
 
                 Runtime rt = Runtime.getRuntime();
                 Process p = rt.exec(consoleCommand);
+
                 inputPathList.clear();
                 changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
             }

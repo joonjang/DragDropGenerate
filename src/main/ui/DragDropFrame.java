@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +17,8 @@ import java.util.List;
 public class DragDropFrame extends JFrame {
     // TODO consider making PYTHON_PATH dynamic to where the script is
     private String PYTHON_FILE = "add_ruler.py";
-    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
-//    private String PYTHON_PATH = "Z:/internal/autoscan/ruler/joonRulerTestField/testingGround/";
+//    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
+    private String PYTHON_PATH = "Z:/internal/autoscan/ruler/joonRulerTestField/testingGround/";
     // String array to allow scalability to add other control inputs
     private String[] controlArr = {"Ruler Gap: ", "Ruler Width: "};
 
@@ -24,7 +27,7 @@ public class DragDropFrame extends JFrame {
 
     public DragDropFrame() {
         super("Drag and drop");
-        this.setPreferredSize(new Dimension(300,200));
+        this.setPreferredSize(new Dimension(300,320));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         addComponentsToPane(this);
@@ -82,11 +85,11 @@ public class DragDropFrame extends JFrame {
 
     // outputs parameters from textfield to send to python script
     // sends: Ruler gap
-    private String getControlCommands() {
-        String controlCommands = "";
+    private List<String> getControlCommands() {
+        List<String> controlCommands = new ArrayList<>();
 
         for (JTextField control : textFieldList) {
-            controlCommands += " " + control.getText();
+            controlCommands.add(control.getText());
         }
 
         return controlCommands;
@@ -97,25 +100,30 @@ public class DragDropFrame extends JFrame {
         try {
             List<String> inputPathList = myDragDropListener.getInputPathList();
             if(!inputPathList.isEmpty()) {
-                Process p = Runtime.getRuntime().exec("python3 "
-                        + PYTHON_PATH + PYTHON_FILE
-                        + " "
-                        + inputPathList.get(inputPathList.size() - 1)
-                        + getControlCommands());
+                List<String> commandList = new ArrayList<>();
+                commandList.add("python3");
+                commandList.add(PYTHON_PATH + PYTHON_FILE);
+                commandList.add(inputPathList.get(inputPathList.size() - 1));
+                commandList.addAll(getControlCommands());
 
-//                String consoleCommand = "python3 "
-//                        + PYTHON_PATH + PYTHON_FILE
-//                        + " "
-//                        + inputPathList.get(inputPathList.size() - 1)
-//                        + getControlCommands();
-//
+//                String[] consoleCommand = commandList.toArray(new String[0]);
+                String consoleCommand = String.join(" ", commandList);
+
+                System.out.println(consoleCommand);
+
 //                Runtime rt = Runtime.getRuntime();
-//                Process p = rt.exec(consoleCommand);
-//
-//                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//
-//                while (stdInput.readLine() != null){
+//                Process p = Runtime.getRuntime().exec(consoleCommand);
+
+                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", consoleCommand);
+                pb.redirectErrorStream(true);
+                pb.directory(new File(PYTHON_PATH));
+
+                Process p = pb.start();
+
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String line = "";
+//                while ((line = stdInput.readLine()) != null){
 //                    if(stdInput.readLine().equals("Complete")) {
 //                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
 //                    }
@@ -123,11 +131,15 @@ public class DragDropFrame extends JFrame {
 //                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.YELLOW, "<html>Generating...<br> </html>");
 //                    }
 //                }
+
+                p.waitFor();
+
 //                stdInput.close();
 //                stdError.close();
 //                Process p = Runtime.getRuntime().exec(consoleCommand);
 
                 inputPathList.clear();
+                changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
             }
             else {
                 changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.PINK, "<html>No file selected<br>Drag file here</html>");
