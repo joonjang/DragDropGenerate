@@ -7,9 +7,6 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +14,7 @@ import java.util.List;
 public class DragDropFrame extends JFrame {
     // TODO consider making PYTHON_PATH dynamic to where the script is
     private String PYTHON_FILE = "add_ruler.py";
-//    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
+    //    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
     private String PYTHON_PATH = "Z:/internal/autoscan/ruler/joonRulerTestField/testingGround/";
     // String array to allow scalability to add other control inputs
     private String[] controlArr = {"Ruler Gap: ", "Ruler Width: "};
@@ -27,7 +24,7 @@ public class DragDropFrame extends JFrame {
 
     public DragDropFrame() {
         super("Drag and drop");
-        this.setPreferredSize(new Dimension(300,320));
+        this.setPreferredSize(new Dimension(300,220));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         addComponentsToPane(this);
@@ -43,7 +40,7 @@ public class DragDropFrame extends JFrame {
         JPanel dropPanel = new JPanel();
         dropPanel.setLayout(new GridBagLayout());
         dropPanel.add(dropLabel);
-        dropPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 30, 50));
+        dropPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 40, 50));
         dropPanel.setBackground(Color.orange);
 
         // Create the drag and drop listener
@@ -106,33 +103,13 @@ public class DragDropFrame extends JFrame {
                 commandList.add(inputPathList.get(inputPathList.size() - 1));
                 commandList.addAll(getControlCommands());
 
-//                String[] consoleCommand = commandList.toArray(new String[0]);
-                String consoleCommand = String.join(" ", commandList);
+                String[] consoleCommand = commandList.toArray(new String[0]);
+                //String consoleCommand = String.join(" ", commandList);
 
                 System.out.println(consoleCommand);
 
-//                Runtime rt = Runtime.getRuntime();
-//                Process p = Runtime.getRuntime().exec(consoleCommand);
-
-                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", consoleCommand);
-                pb.redirectErrorStream(true);
-                pb.directory(new File(PYTHON_PATH));
-
-                Process p = pb.start();
-
-                BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-                String line = "";
-//                while ((line = stdInput.readLine()) != null){
-//                    if(stdInput.readLine().equals("Complete")) {
-//                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.orange, "<html>File generated<br>Drag new file here</html>");
-//                    }
-//                    else{
-//                        changeDropPanelColorAndLabel(dropPanel, dropLabel, Color.YELLOW, "<html>Generating...<br> </html>");
-//                    }
-//                }
-
-                p.waitFor();
+                Runtime rt = Runtime.getRuntime();
+                Process p = Runtime.getRuntime().exec(consoleCommand);
 
 //                stdInput.close();
 //                stdError.close();
@@ -152,7 +129,7 @@ public class DragDropFrame extends JFrame {
 
     // helper method to change the drag drop UI color and text
     private void changeDropPanelColorAndLabel(JPanel dropPanel, JLabel dropLabel, Color bgColor, String s) {
-        dropPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 30, 50));
+        dropPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 30, 50));
         dropPanel.setBackground(bgColor);
         dropLabel.setText(s);
     }
