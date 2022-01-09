@@ -1,5 +1,6 @@
 import sys
 
+
 inputPath = str(sys.argv[1])
 rulerGap = str(sys.argv[2])
 rulerWidth = str(sys.argv[3])

@@ -3,6 +3,8 @@ package ui;
 import model.MyDragDropListener;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -16,11 +18,13 @@ public class DragDropFrame extends JFrame {
     private String PYTHON_FILE = "add_ruler.py";
     //    private String PYTHON_PATH = "/Users/joonjang/IdeaProjects/DragDropGenerate/ruler/";
     private String PYTHON_PATH = "Z:/internal/autoscan/ruler/joonRulerTestField/testingGround/";
+
     // String array to allow scalability to add other control inputs
     private String[] controlArr = {"Ruler Gap: ", "Ruler Width: "};
 
     private MyDragDropListener myDragDropListener;
     private List<JTextField> textFieldList = new ArrayList<>();
+    boolean canEnable = false;
 
     public DragDropFrame() {
         super("Drag and drop");
@@ -54,6 +58,7 @@ public class DragDropFrame extends JFrame {
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
         JButton genButton = new JButton("Generate");
+        genButton.setEnabled(canEnable);
 
         genButton.addActionListener(new ActionListener() {
             @Override
@@ -63,17 +68,38 @@ public class DragDropFrame extends JFrame {
         });
 
         // Generate controls label and textfield
+        DocumentListener listener = new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent e) { changedUpdate(e); }
+            @Override
+            public void insertUpdate(DocumentEvent e) { changedUpdate(e); }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                boolean canEnable = true;
+                for (JTextField tf : textFieldList) {
+                    if (tf.getText().isEmpty()) {
+                        canEnable = false;
+                    }
+                }
+                genButton.setEnabled(canEnable);
+            }
+        };
+
+
         for (int i = 0; i < controlArr.length; i++) {
-            textFieldList.add(new JTextField(10));
+            JTextField tf = new JTextField(10);
+            tf.getDocument().addDocumentListener(listener);
+            textFieldList.add(tf);
 
             JPanel inputLine = new JPanel();
             inputLine.setLayout(new BoxLayout(inputLine, BoxLayout.X_AXIS));
             inputLine.add(new Label(controlArr[i]));
             inputLine.add(textFieldList.get(i));
-//            controls.add(new Label(controlArr[i]));
-//            controls.add(textFieldList.get(i));
             controls.add(inputLine);
         }
+
+
         controls.add(genButton);
 
         pane.add(controls, BorderLayout.SOUTH);

@@ -52,7 +52,7 @@ public class MyDragDropListener implements DropTargetListener {
                             System.out.println("File path is '" + file.getPath() + "'.");
 
                             dropPanel.setBackground(new Color(173, 255, 47));
-                            label.setText(file.getPath().replaceAll(".+\\*", ""));
+                            label.setText(file.getPath().replaceAll(".+\\\\", ""));
                             dropPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
                         }
                         else {
